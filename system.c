@@ -105,6 +105,9 @@ void create_bunpu()
         seikai_count[j] = 0;
     }
 
+    int point_sum=0;    //全受験者の合計点数
+    int point=0;        //各人の点数
+
     int result; //正解か不正解かを読み取る
 
     //順番に一人一人が正解なのかを読み取り、問題ごとの正解人数を集計
@@ -116,9 +119,13 @@ void create_bunpu()
             if (result == 1)
             {                      //正解なら
                 seikai_count[j]++; //正解人数をカウントアップ
+                point++;
             }
         }
+        point_sum+=point;
+        point=0;
     }
+
 
     //最も点数の低い・高い問題は何か
     int min_idx = 0;
@@ -171,16 +178,19 @@ void create_bunpu()
         printf("\n");
         printf("タイトル：%s\n", title);
         printf("＜集計結果＞\n\n");
+        int correct_num=0;  //正解した人数
         for (j = 0; j < mondai_num; j++)
         {
             printf("問題%2d: ", j + 1);
             for (star = 0; star < seikai_count[j]; star++)
             {
                 printf("*");
+                correct_num++;
             }
-            printf("\n");
+            printf("     正解率（%.1f％)\n",((double)correct_num/n)*100);
+            correct_num=0;
         }
-        printf("集計人数：%d人\n", n);
+        printf("集計人数：%d人　　平均点：%.1f\n", n,(double)point_sum/n);
         printf("\n＜分析結果＞\n");
         printf("最も出来が良い問題：問題%d　正解率%3.1f％\n", max_idx + 1, ((double)max / n) * 100);
         printf("最も出来が悪い問題：問題%d　正解率%3.1f％\n", min_idx + 1, ((double)min / n) * 100);
@@ -212,16 +222,19 @@ void create_bunpu()
         //正統数を画面に順番に表示
         int star; //星の数を制御するループ用
         fprintf(fp2, "＜集計結果＞\n\n");
+        int correct_num=0;  //正解した人数
         for (j = 0; j < mondai_num; j++)
         {
             fprintf(fp2, "問題%2d: ", j + 1);
             for (star = 0; star < seikai_count[j]; star++)
             {
                 fprintf(fp2, "*");
+                correct_num++;
             }
-            fprintf(fp2, "\n");
+            fprintf(fp2,"     正解率（%.1f％)\n",((double)correct_num/n)*100);
+            correct_num=0;
         }
-        fprintf(fp2, "集計人数：%d人\n", n);
+        fprintf(fp2, "集計人数：%d人　　平均点：%.1f\n", n,(double)point_sum/n);
 
         fprintf(fp2, "\n＜分析結果＞\n");
         fprintf(fp2, "最も出来が良い問題：問題%d　正解率%3.1f％\n", max_idx + 1, ((double)max / n) * 100);
